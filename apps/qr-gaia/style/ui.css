@@ -1,0 +1,60 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+}
+
+/* Overrides buttons.css, should be upstreamed */
+button[hidden] {
+  display: none;
+}
+
+#main button, #preview-panel button {
+  margin: 3rem 3rem 0;
+  width: calc(100% - 6rem);
+}
+
+#log {
+  position: absolute;
+  bottom: 0;
+}
+
+#preview-panel, #preview-panel video {
+  position: absolute;
+  background: black;
+  top: 0; right: 0; bottom: 0; left: 0;
+}
+
+#preview-panel video {
+  transform: rotate(90deg);
+}
+
+#preview-panel menu {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  padding-left: 0;
+  z-index: 1;
+}
+
+#preview-panel button span {
+  content: '';
+  position: absolute;
+  /*width: 100%;*/
+  background: repeat scroll left top rgba(0, 0, 0, 0.3);
+  height: 6.8rem;
+  left: 0; right: 0;
+  bottom: -1.5rem;
+  z-index: -1;
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.1);
+}
+
+#processing {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: url(/style/throbber.png) center no-repeat rgba(255, 255, 255, 0.5);
+  z-index: 100;
+}
