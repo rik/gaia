@@ -195,12 +195,9 @@ var AppIntegration = (function() {
         // will switch back to the main frame.
         yield device.switchToFrame();
 
-        var script = 'window.wrappedJSObject.WindowManager.kill("' +
-                        self.origin +
-                      '")';
-
-        // Function.toString is busted (804404)
-        yield device.executeScript(script);
+        var result = yield device.executeAsyncScript(
+          'GaiaApps.closeWithName("' + self.appName + '");'
+        );
 
         done();
       }, callback);
@@ -251,8 +248,10 @@ var AppIntegration = (function() {
         self.name = result.name;
         self.frame = result.frame;
 
-        var body = yield device.findElement('body');
-        yield app.waitUntilElement(body, 'displayed');
+        if (waitForBody) {
+          var body = yield device.findElement('body');
+          yield app.waitUntilElement(body, 'displayed');
+        }
 
         done(null, self);
 
