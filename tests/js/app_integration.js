@@ -241,7 +241,7 @@ var AppIntegration = (function() {
           'GaiaApps.launchWithName("' + self.appName + '");'
         );
 
-        yield device.switchToFrame(result.frameId);
+        yield device.switchToFrame(result.frame);
 
         self.origin = result.origin;
         self.src = result.src;

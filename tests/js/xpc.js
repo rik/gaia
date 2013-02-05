@@ -8,14 +8,14 @@
 
   window.require = function(url, cb) {
 
-    if (url.lastIndexOf('apps/', 0) === 0) {
-      // required for loading of test files
-      url = '../../' + url;
-    } else if (url.lastIndexOf('/common', 0) === 0) {
+    if (url.lastIndexOf('/common', 0) === 0) {
       // required so we can load the unit test helper.js
       url = '../../test_apps/test-agent' + url;
-    } else if (url.lastIndexOf('/', 0) === 0) {
-      url = '../..' + url;
+    } else if (url.lastIndexOf('apps/', 0) === 0 ||
+               url.lastIndexOf('tests/', 0) === 0 ||
+               url.lastIndexOf('/', 0) === 0) {
+      // required for loading of test files
+      url = '../../' + url;
     }
 
     url = path.resolve(url);
@@ -127,7 +127,8 @@
       timeout: 20000
     });
 
-    window.xpcArgv.slice(2).forEach(function(test) {
+    window.mozTestInfo = {appName: window.xpcArgv[2]};
+    window.xpcArgv.slice(3).forEach(function(test) {
       require(test);
     });
 

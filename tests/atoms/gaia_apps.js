@@ -196,7 +196,6 @@ var GaiaApps = {
           function() {
             let app = runningApps[origin];
             let result = {frame: app.iframe,
-                          frameId: app.iframe.id,
                           src: app.iframe.src,
                           name: app.name,
                           origin: origin};

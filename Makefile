@@ -385,27 +385,32 @@ INJECTED_GAIA = "$(MOZ_TESTS)/browser/gaia"
 
 TEST_PATH=gaia/tests/${TEST_FILE}
 
-ifeq ($(TESTS),)
+ifeq ($(APPS),)
 	ifneq ($(APP),)
-		TESTS=$(shell find apps/$(APP)/test/integration/ -name "*_test.js" -type f )
+		APPS=$(APP)
 	else
-		TESTS=$(shell find apps -name "*_test.js" -type f | grep integration)
+		APPS=$(shell find apps -type d -name 'test' | sed -e 's|^apps/||' -e 's|/test$$||' )
 	endif
-endif
-
-ifneq ($(APP),)
-	TESTS_PERF=$(shell find apps/$(APP)/test/performance/ -name "*_test.js" -type f )
-else
-	TESTS_PERF=$(shell find apps -name "*_test.js" -type f | grep performance)
 endif
 
 .PHONY: test-integration
 test-integration:
-	@./tests/js/bin/runner $(TESTS)
+	# FIXME !!!!!!
+	SHARED_INTEGRATION=`find tests/integration -name "*_test.js" -type f`; \
+	for app in ${APPS}; \
+	do \
+		FILES_INTEGRATION=`test -d apps/$$app/test/integration && find apps/$$app/test/integration -name "*_test.js" -type f`; \
+		./tests/js/bin/runner $$app $${SHARED_INTEGRATION} $${FILES_INTEGRATION}; \
+	done;
 
 .PHONY: test-perf
 test-perf:
-	@./tests/js/bin/runner $(TESTS_PERF)
+	SHARED_PERF=`find tests/performance -name "*_test.js" -type f`; \
+	for app in ${APPS}; \
+	do \
+		FILES_PERF=`test -d apps/$$app/test/performance && find apps/$$app/test/performance -name "*_test.js" -type f`; \
+		./tests/js/bin/runner $$app $${SHARED_PERF} $${FILES_PERF}; \
+	done;
 
 .PHONY: tests
 tests: webapp-manifests offline
