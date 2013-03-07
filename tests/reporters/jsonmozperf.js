@@ -34,14 +34,26 @@ function JSONMozPerfReporter(runner) {
     }
 
     for (var title in global.mozPerfDurations) {
+      var foo = global.mozPerfDurations[title];
+      var durations = foo;
+      var debug = [];
+      if (foo[0].time) {
+        durations = foo.map(function (single) { return single.time});
+        debug = foo.map(function (single) { return single.type + '-' + single.src});
+        if (foo.length > 5) {
+          debug.push('Too many results');
+        }
+      }
+
       // we can have several measurements for one test, that's why we're
       // rewriting the title (each measurement has a title)
       passes.push({
         title: test.title + ' ' + title,
         fullTitle: test.fullTitle() + ' ' + title,
         duration: test.duration,
-        mozPerfDurations: global.mozPerfDurations[title],
-        mozPerfDurationsAverage: average(global.mozPerfDurations[title])
+        mozPerfDurations: durations,
+        mozPerfDurationsAverage: average(durations),
+        debug: debug,
       });
     }
   });
