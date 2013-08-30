@@ -220,6 +220,9 @@ var KeypadManager = {
       event.stopPropagation();
 
     if (this._phoneNumber === '') {
+      CallHandler.openCallScreen(function() {
+        window.resizeTo(100, 40);
+      });
       var self = this;
       CallLogDBManager.getGroupAtPosition(1, 'lastEntryDate', true, 'dialing',
         function hk_ggap_callback(result) {

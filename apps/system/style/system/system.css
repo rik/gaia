@@ -238,6 +238,7 @@ body {
 
   background-repeat: no-repeat;
   background-position: center center;
+  /*transition: top 1s step-end, height 1s step-end, opacity 1s step-end;*/
 }
 
 @media not all and (-moz-physical-home-button) {
@@ -280,6 +281,9 @@ body {
 #screen.active-statusbar #windows > .appWindow.fullscreen-app {
   top: 4rem;
   height: calc(100% - 4rem);
+  /*opacity: 0.5;*/
+  /* On exit, wait for the attention screen to cover the app before resizing it */
+  transition: none;
 }
 
 #windows > .appWindow.opening {
