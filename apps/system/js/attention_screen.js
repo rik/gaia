@@ -32,6 +32,7 @@ var AttentionScreen = {
 
     window.addEventListener('mozbrowserclose', this.close.bind(this), true);
     window.addEventListener('mozbrowsererror', this.close.bind(this), true);
+    window.addEventListener('mozbrowserresize', this.toggle.bind(this), true);
 
     window.addEventListener('keyboardchange', this.resize.bind(this), true);
     window.addEventListener('keyboardhide', this.resize.bind(this), true);
@@ -59,6 +60,14 @@ var AttentionScreen = {
       // screen is not fully visible, or it will overrides the height
       // we defined with #attention-screen.status-mode
       this.attentionScreen.style.height = '';
+    }
+  },
+
+  toggle: function as_toggle(evt) {
+    if (evt.detail.height <= 40) {
+      this.hide();
+    } else {
+      this.show();
     }
   },
 
