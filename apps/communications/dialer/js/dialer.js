@@ -241,7 +241,7 @@ var CallHandler = (function callHandler() {
   window.addEventListener('message', handleMessage);
 
   /* === Calls === */
-  function call(number) {
+  function call(number, cardIndex) {
     if (MmiManager.isMMI(number)) {
       MmiManager.send(number);
       // Clearing the code from the dialer screen gives the user immediate
@@ -278,7 +278,8 @@ var CallHandler = (function callHandler() {
     };
 
     LazyLoader.load('/dialer/js/telephony_helper.js', function() {
-      TelephonyHelper.call(number, oncall, connected, disconnected, error);
+      TelephonyHelper.call(
+        number, cardIndex, oncall, connected, disconnected, error);
     });
   }
 
