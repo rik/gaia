@@ -2,20 +2,15 @@
            MockCall, MockCallsHandler, MockDialerIndexHtml, MockMozTelephony,
            MockSettingsListener, MocksHelper, MockTonePlayer,
            telephonyAddCall */
-/* We're not actually exporting these, but because we have shared code requiring
- * other shared code, we have to mark them as such here. */
-/* exports SimPicker, SimSettingsHelper */
 
 'use strict';
-
-requireApp('communications/shared/js/sim_picker.js');
-requireApp('communications/shared/js/sim_settings_helper.js');
 
 requireApp('communications/dialer/js/keypad.js');
 
 requireApp('communications/dialer/test/unit/mock_lazy_loader.js');
 requireApp('communications/dialer/test/unit/mock_utils.js');
 requireApp('communications/dialer/test/unit/mock_call.js');
+requireApp('communications/dialer/test/unit/mock_call_button.js');
 requireApp('communications/dialer/test/unit/mock_call_handler.js');
 requireApp('communications/dialer/test/unit/mock_call_log_db_manager.js');
 requireApp('communications/dialer/test/unit/mock_calls_handler.js');
@@ -29,6 +24,7 @@ requireApp('communications/dialer/test/unit/mock_dialer_index.html.js');
 var mocksHelperForKeypad = new MocksHelper([
   'LazyLoader',
   'Utils',
+  'CallButton',
   'CallHandler',
   'CallsHandler',
   'CallLogDBManager',
@@ -109,7 +105,7 @@ suite('dialer/keypad', function() {
 
     test('Call button pressed with no calls in Call Log', function() {
       subject._phoneNumber = '';
-      subject.makeCall();
+      subject.fetchLastCalled();
       assert.equal(subject._phoneNumber, '');
     });
 
@@ -123,7 +119,7 @@ suite('dialer/keypad', function() {
       };
       CallLogDBManager.add(recentCall, function(result) {
         subject._phoneNumber = '';
-        subject.makeCall();
+        subject.fetchLastCalled();
         assert.equal(subject._phoneNumber, '');
       });
     });
@@ -136,7 +132,7 @@ suite('dialer/keypad', function() {
       };
       subject._phoneNumber = '';
       CallLogDBManager.add(recentCall);
-      subject.makeCall();
+      subject.fetchLastCalled();
       assert.equal(subject._phoneNumber, recentCall.number);
     });
 
