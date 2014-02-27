@@ -95,15 +95,21 @@ suite('navigation bar', function() {
         };
       });
 
-      //test('> One SIM', function(done) {
-      //  window.postMessage(notificationObject, '*');
+      test('> One SIM', function(done) {
+        console.log('TEST pre-postmessage');
+        window.postMessage(notificationObject, '*');
+        console.log('TEST post-postmessage');
 
-      //  setTimeout(function() {
-      //    MockNavigatormozApps.mTriggerLastRequestSuccess();
-      //    sinon.assert.calledWith(Notification, 'missedCall');
-      //    done();
-      //  });
-      //});
+        setTimeout(function() {
+          console.log('TEST in set timeout');
+          MockNavigatormozApps.mTriggerLastRequestSuccess();
+          console.log('TEST triggered last request');
+          sinon.assert.calledWith(Notification, 'missedCall');
+          console.log('TEST assert done');
+          done();
+          console.log('TEST done');
+        });
+      });
 
       test('> Two SIMs', function(done) {
         MockNavigatorMozIccManager.addIcc('6789', {

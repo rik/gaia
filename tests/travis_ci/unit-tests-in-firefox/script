@@ -1,3 +1,6 @@
 #! /bin/bash -v
 
-make test-agent-test REPORTER=Min
+for i in {1..30}
+do
+  make test-agent-test APP=communications/dialer REPORTER=Spec
+done

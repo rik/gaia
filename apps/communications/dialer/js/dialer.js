@@ -51,13 +51,19 @@ var CallHandler = (function callHandler() {
   }
 
   function handleNotificationRequest(number, serviceId) {
+    console.log('FILE handleNotificationRequest');
     LazyLoader.load('/dialer/js/utils.js', function() {
+      console.log('FILE lazy loaded');
       Contacts.findByNumber(number, function lookup(contact, matchingTel) {
+        console.log('FILE found by number');
         LazyL10n.get(function localized(_) {
+          console.log('FILE lazy l10n ready');
           var title;
           if (navigator.mozIccManager.iccIds.length > 1) {
+            console.log('FILE multi sim');
             title = _('missedCallMultiSim', {n: serviceId + 1});
           } else {
+            console.log('FILE mono sim');
             title = _('missedCall');
           }
 
@@ -80,16 +86,20 @@ var CallHandler = (function callHandler() {
             body = _('from-number', {number: number});
           }
 
+          console.log('FILE pre mozapps request');
           navigator.mozApps.getSelf().onsuccess = function getSelfCB(evt) {
+            console.log('FILE mozapps cb');
             var app = evt.target.result;
 
             var iconURL = NotificationHelper.getIconURI(app, 'dialer');
+            console.log('FILE getIconURI');
             var clickCB = function() {
               app.launch('dialer');
               window.location.hash = '#call-log-view';
             };
             var notification =
               new Notification(title, {body: body, icon: iconURL});
+            console.log('FILE new Notification');
             notification.addEventListener('click', clickCB);
           };
         });
