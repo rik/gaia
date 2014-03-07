@@ -83,6 +83,8 @@ suite('dialer/keypad', function() {
     });
 
     test('Get IMEI via send MMI', function() {
+      var callSpy = this.sinon.spy(CallButton, 'makeCall');
+
       var mmi = '*#06#';
       var fakeEvent = {
         target: {
@@ -100,7 +102,7 @@ suite('dialer/keypad', function() {
         subject.keyHandler(fakeEvent);
       }
 
-      assert.equal(CallHandler._lastCall, mmi);
+      sinon.assert.calledOnce(callSpy);
     });
 
     test('Call button pressed with no calls in Call Log', function() {

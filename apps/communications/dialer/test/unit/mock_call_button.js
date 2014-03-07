@@ -5,7 +5,5 @@
 
 var MockCallButton = {
   init: function() { },
-  makeCall: function() {
-    CallHandler.call(KeypadManager.phoneNumber);
-  }
+  makeCall: function() { }
 };
