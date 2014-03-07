@@ -7,9 +7,17 @@ var CallButton = {
   _phoneNumberGetter: null,
   _imports: ['/shared/js/option_menu.js',
              '/shared/js/sim_picker.js',
-             '/shared/js/sim_settings_helper.js'],
+             '/shared/js/sim_settings_helper.js',
+             // document.getElementById('sim-picker')
+             ],
 
   init: function cb_init(button, phoneNumberGetter) {
+    // window.navigator.mozMobileConnections = [1, 2];
+    // LazyLoader.load(this._imports, function() {
+    //   SimPicker.show(1, '12345', function(cardIndex) {
+    //                 console.log('WESH', cardIndex);
+    //   });
+    // });
     this._phoneNumberGetter = phoneNumberGetter;
 
     button.addEventListener('click', this._click.bind(this));
