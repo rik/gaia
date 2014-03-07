@@ -1,4 +1,3 @@
-/* globals CallHandler, KeypadManager */
 /* exported MockCallButton */
 
 'use strict';

@@ -1,7 +1,7 @@
-/* globals CallHandler, CallLogDBManager, gTonesFrequencies, KeypadManager,
+/* globals CallButton, CallLogDBManager, gTonesFrequencies, KeypadManager,
            MockCall, MockCallsHandler, MockDialerIndexHtml, MockMozTelephony,
-           MockSettingsListener, MocksHelper, MockTonePlayer,
-           telephonyAddCall */
+           MockSettingsListener, MocksHelper, MockTonePlayer, telephonyAddCall
+*/
 
 'use strict';
 
@@ -25,7 +25,6 @@ var mocksHelperForKeypad = new MocksHelper([
   'LazyLoader',
   'Utils',
   'CallButton',
-  'CallHandler',
   'CallsHandler',
   'CallLogDBManager',
   'HandledCall',
