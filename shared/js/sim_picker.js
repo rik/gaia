@@ -9,32 +9,52 @@
    * cards when making calls, sending SMS, etc.
    */
   var SimPicker = {
+    _domBuilt: false,
+    _simPickerElt: null,
+
     show: function hk_show(defaultCardIndex, phoneNumber, simSelectedCallback) {
-      var self = this;
       this._simSelectedCallback = simSelectedCallback;
+      this._simPickerElt = document.getElementById('sim-picker');
 
+      this._buildDom();
+      var self = this;
       LazyL10n.get(function() {
-        var localize = navigator.mozL10n.localize;
-        localize(document.getElementById('sim-picker-dial-via'),
+        navigator.mozL10n.localize(document.getElementById(
+                                   'sim-picker-dial-via'),
                  'sim-picker-dial-via', {phoneNumber: phoneNumber});
+        var simButtons = self._simPickerElt.querySelectorAll(
+          'button[data-card-index]');
+        for (var i = 0; i < simButtons.length; i++) {
+          if (simButtons[i].dataset.cardIndex == defaultCardIndex) {
+            simButtons[i].classList.add('is-default');
+          }
+        }
 
+        self._simPickerElt.hidden = false;
+      });
+    },
+
+    _buildDom: function() {
+      if (this._domBuilt) {
+        return;
+      }
+
+      this._domBuilt = true;
+      var self = this;
+      LazyL10n.get(function() {
         var templateNode = document.getElementById(
           'sim-picker-button-template');
         for (var i = 0; i < window.navigator.mozMobileConnections.length; i++) {
           var clonedNode = templateNode.cloneNode(true);
           clonedNode.dataset.cardIndex = i;
-          localize(clonedNode.querySelector('span'), 'sim-picker-button',
-                   {n: i + 1});
-          if (i === defaultCardIndex) {
-            clonedNode.classList.add('is-default');
-          }
+          navigator.mozL10n.localize(clonedNode.querySelector('span'),
+                                     'sim-picker-button', {n: i + 1});
           templateNode.parentNode.insertBefore(clonedNode, templateNode);
         }
         templateNode.remove();
 
         var simPickerElt = document.getElementById('sim-picker');
         simPickerElt.addEventListener('click', self);
-        simPickerElt.hidden = false;
       });
     },
 
