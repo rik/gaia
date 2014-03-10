@@ -1,14 +1,19 @@
-/* globals LazyLoader, SimPicker, SimSettingsHelper */
+/* globals LazyLoader, SettingsListener, SimPicker, SimSettingsHelper */
 /* exported CallButton */
 
 'use strict';
 
 var CallButton = {
+  _button: null,
   _phoneNumberGetter: null,
+  _callCallback: null,
+
   _imports: ['/shared/js/sim_picker.js',
-             '/shared/js/sim_settings_helper.js'],
+             '/shared/js/sim_settings_helper.js',
+             '/shared/js/settings_listener.js'],
 
   init: function cb_init(button, phoneNumberGetter, callCallback) {
+    this._button = button;
     this._phoneNumberGetter = phoneNumberGetter;
     this._callCallback = callCallback;
 
@@ -17,6 +22,14 @@ var CallButton = {
     if (window.navigator.mozMobileConnections &&
         window.navigator.mozMobileConnections.length > 1) {
       button.addEventListener('contextmenu', this._contextmenu.bind(this));
+
+      var self = this;
+      LazyLoader.load(this._imports, function() {
+        self._simIndication = button.querySelector('.js-sim-indication');
+        SettingsListener.observe(
+          'ril.telephony.defaultServiceId', 0, self._updateUI.bind(self));
+        self._updateUI();
+      });
     }
   },
 
@@ -46,6 +59,27 @@ var CallButton = {
           self.makeCall();
         }
       });
+    });
+  },
+
+  _updateUI: function cb_updateUI() {
+    var self = this;
+    SimSettingsHelper.getCardIndexFrom('outgoingCall', function(cardIndex) {
+      if (cardIndex >= 0) {
+        if (self._simIndication) {
+          navigator.mozL10n.localize(self._simIndication,
+                                     'sim-picker-button', {n: cardIndex+1});
+          self._simIndication.classList.remove('hide');
+        }
+
+        self._button.classList.add('has-preferred-sim');
+      } else {
+        if (self._simIndication) {
+          self._simIndication.classList.add('hide');
+        }
+
+        self._button.classList.remove('has-preferred-sim');
+      }
     });
   },
 

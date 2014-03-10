@@ -233,7 +233,6 @@ article:not(:target) #keypad-delete {
   background-size: auto 100%;
   border: 0;
   border-radius: .2rem;
-  vertical-align: middle;
 }
 
 #keypad-callbar-call-action:active {
@@ -250,13 +249,49 @@ article:not(:target) #keypad-delete {
   background-position: center;
 }
 
-#keypad-callbar-call-action > div {
-  margin: auto;
-  width: 4rem;
+#keypad-callbar-call-action #keypad-callbar-indicators {
+  position: relative;
+  width: 100%;
   height: 4rem;
+}
+
+#keypad-callbar-indicators #keypad-callbar-pick-up {
+  height: inherit;
   background-image: url("images/ActionIcon_40x40_pickup.png");
   background-repeat: no-repeat;
   background-size: 4rem 4rem;
+  background-position: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#keypad-callbar-indicators #keypad-callbar-multi-sim {
+  display: table;
+  float: right;
+  border-spacing: 0;
+  margin-right: 10px;
+  height: inherit;
+}
+
+#keypad-callbar-multi-sim .js-sim-indication {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 1.3rem;
+}
+
+#keypad-callbar-call-action.has-preferred-sim:after {
+  content: "";
+  width: 14px;
+  height: 10px;
+  float: right;
+  margin-top: -10px;
+  margin-right: 9px;
+  background-image: url("images/long-tap-indicator.png");
+  background-repeat: no-repeat;
+  background-size: 14px 10px;
   background-position: center;
 }
 
