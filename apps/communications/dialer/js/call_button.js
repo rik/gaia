@@ -19,7 +19,7 @@ var CallButton = {
 
     button.addEventListener('click', this._click.bind(this));
 
-    if (window.navigator.mozMobileConnections &&
+    if (true || window.navigator.mozMobileConnections &&
         window.navigator.mozMobileConnections.length > 1) {
       button.addEventListener('contextmenu', this._contextmenu.bind(this));
 
@@ -28,7 +28,7 @@ var CallButton = {
         self._simIndication = button.querySelector('.js-sim-indication');
         SettingsListener.observe(
           'ril.telephony.defaultServiceId', 0, self._updateUI.bind(self));
-        self._updateUI();
+        // self._updateUI();
       });
     }
   },
@@ -65,6 +65,7 @@ var CallButton = {
   _updateUI: function cb_updateUI() {
     var self = this;
     SimSettingsHelper.getCardIndexFrom('outgoingCall', function(cardIndex) {
+      console.log('WESH');
       if (cardIndex >= 0) {
         if (self._simIndication) {
           navigator.mozL10n.localize(self._simIndication,
@@ -72,13 +73,13 @@ var CallButton = {
           self._simIndication.classList.remove('hide');
         }
 
-        self._button.classList.add('has-preferred-sim');
+        document.body.classList.add('has-preferred-sim');
       } else {
         if (self._simIndication) {
           self._simIndication.classList.add('hide');
         }
 
-        self._button.classList.remove('has-preferred-sim');
+        document.body.classList.remove('has-preferred-sim');
       }
     });
   },
