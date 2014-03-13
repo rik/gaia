@@ -623,6 +623,7 @@ var CallLogDBManager = {
    * param recentCall
    *        Object representing the new call to be stored with this form:
    *        { number: <String>,
+   *          serviceId: <String>,
    *          type: <String>,
    *          status: <String>,
    *          date: <Date>,
@@ -665,6 +666,7 @@ var CallLogDBManager = {
             group.lastEntryDate = recentCall.date;
             group.emergency = recentCall.emergency;
             group.voicemail = recentCall.voicemail;
+            group.serviceId = recentCall.serviceId;
           }
           group.retryCount++;
           groupsStore.put(group).onsuccess = function onsuccess() {
@@ -677,7 +679,8 @@ var CallLogDBManager = {
             lastEntryDate: recentCall.date,
             retryCount: 1,
             emergency: recentCall.emergency,
-            voicemail: recentCall.voicemail
+            voicemail: recentCall.voicemail,
+            serviceId: recentCall.serviceId
           };
           Contacts.findByNumber(recentCall.number,
                                 function(contact, matchingTel) {

@@ -35,7 +35,8 @@ suite('dialer/call_log_db', function() {
               now + (2 * 86400000),
               now + (2 * 86400000) + 1];
 
-  function checkGroup(group, call, lastEntryDate, retryCount, contact, result) {
+  function checkGroup(group, call, lastEntryDate, retryCount, serviceId,
+                      contact, result) {
     var id = Utils.getDayDate(call.date) + '-' +
              (call.number || '') + '-' + call.type;
     if (call.status) {
@@ -48,6 +49,7 @@ suite('dialer/call_log_db', function() {
     assert.equal(group.status, call.status);
     assert.equal(group.retryCount, retryCount);
     assert.equal(group.lastEntryDate, lastEntryDate);
+    assert.equal(group.serviceId, serviceId, 'serviceId');
     if (contact) {
       assert.equal(typeof group.contact, 'object');
       assert.equal(group.contact.id, MockContacts.mId);
@@ -115,12 +117,13 @@ suite('dialer/call_log_db', function() {
       var call = {
         number: numbers[0],
         type: 'incoming',
-        date: days[0]
+        date: days[0],
+        serviceId: 2
       };
       CallLogDBManager.add(call, function(result) {
         CallLogDBManager.getGroupList(function(groups) {
           assert.equal(groups.length, 1);
-          checkGroup(groups[0], call, call.date, 1, true, result);
+          checkGroup(groups[0], call, call.date, 1, 2, true, result);
           CallLogDBManager.getRecentList(function(recents) {
             assert.length(recents, 1);
             checkCall(recents[0], call);
@@ -142,12 +145,13 @@ suite('dialer/call_log_db', function() {
       var call = {
         number: null,
         type: 'incoming',
-        date: days[0]
+        date: days[0],
+        serviceId: 2
       };
       CallLogDBManager.add(call, function(result) {
         CallLogDBManager.getGroupList(function(groups) {
           assert.equal(groups.length, 1);
-          checkGroup(groups[0], call, call.date, 1, true, result);
+          checkGroup(groups[0], call, call.date, 1, 2, true, result);
           CallLogDBManager.getRecentList(function(recents) {
             assert.length(recents, 1);
             checkCall(recents[0], call);
@@ -170,12 +174,13 @@ suite('dialer/call_log_db', function() {
         number: numbers[0],
         type: 'incoming',
         date: days[0],
-        status: 'connected'
+        status: 'connected',
+        serviceId: 2
       };
       CallLogDBManager.add(call, function(result) {
         CallLogDBManager.getGroupList(function(groups) {
           assert.equal(groups.length, 1);
-          checkGroup(groups[0], call, call.date, 1, true, result);
+          checkGroup(groups[0], call, call.date, 1, 2, true, result);
           CallLogDBManager.getRecentList(function(recents) {
             assert.length(recents, 1);
             checkCall(recents[0], call);
@@ -197,12 +202,13 @@ suite('dialer/call_log_db', function() {
       var call = {
         number: '',
         type: 'incoming',
-        date: days[0]
+        date: days[0],
+        serviceId: 2
       };
       CallLogDBManager.add(call, function(result) {
         CallLogDBManager.getGroupList(function(groups) {
           assert.equal(groups.length, 1);
-          checkGroup(groups[0], call, call.date, 1, true, result);
+          checkGroup(groups[0], call, call.date, 1, 2, true, result);
           CallLogDBManager.getRecentList(function(recents) {
             assert.length(recents, 1);
             checkCall(recents[0], call);
