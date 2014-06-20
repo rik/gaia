@@ -393,6 +393,7 @@ var CallHandler = (function callHandler() {
                                                btCommandHandler);
 
         window.navigator.mozSetMessageHandler('ussd-received', function(evt) {
+          console.log('XXX ussd-received hidden:', document.hidden)
           if (document.hidden) {
             var request = window.navigator.mozApps.getSelf();
             request.onsuccess = function() {
@@ -401,12 +402,14 @@ var CallHandler = (function callHandler() {
 
             var lock = navigator.requestWakeLock('high-priority');
             var safetyId = setTimeout(function safetyUnlock() {
+              console.log('XXX lock released timeout')
               if (lock) {
                 lock.unlock();
                 lock = null;
               }
-            }, 30000);
+            }, 3000);
             document.addEventListener('visibilitychange', function wait() {
+              console.log('XXX lock released visibilitychange')
               if (lock) {
                 lock.unlock();
                 lock = null;
@@ -414,6 +417,9 @@ var CallHandler = (function callHandler() {
               }
             });
           }
+          setTimeout(function() {
+            console.log('lock should have been set')
+          }, 5000)
 
           MmiManager.handleMMIReceived(evt.message, evt.sessionEnded,
                                        evt.serviceId);
