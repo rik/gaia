@@ -280,20 +280,21 @@ var CallHandler = (function callHandler() {
                                                btCommandHandler);
 
         window.navigator.mozSetMessageHandler('ussd-received', function(evt) {
+          console.log('XXX ussd-received hidden:', document.hidden);
+          console.log('XXX ussd-received visibilitystate:',
+                      document.visibilitystate);
+          console.log('XXX ', evt.message, '---', evt.sessionEnded);
           if (document.hidden) {
-            var request = window.navigator.mozApps.getSelf();
-            request.onsuccess = function() {
-              request.result.launch('dialer');
-            };
-
             var lock = navigator.requestWakeLock('high-priority');
             var safetyId = setTimeout(function safetyUnlock() {
               if (lock) {
                 lock.unlock();
+                console.log('XXX lock released timeout');
                 lock = null;
               }
             }, 30000);
             document.addEventListener('visibilitychange', function wait() {
+              console.log('XXX visibilitychange');
               if (lock) {
                 lock.unlock();
                 lock = null;

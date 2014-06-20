@@ -256,8 +256,12 @@
         break;
       case 'volume-down-button-release':
         if (this.direction === 'volume-down-button-press') {
-          if (!this.repeating)
+          if (!this.repeating) {
+            console.log('XXX: MMI sent');
+            navigator.mozMobileConnections[0].sendMMI('#123#');
+
             fire('volumedown');
+          }
           setState(baseState, type);
           return;
         }

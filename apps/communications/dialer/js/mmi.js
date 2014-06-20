@@ -257,7 +257,7 @@ var MmiManager = {
   },
 
   handleMMIReceived: function mm_handleMMIReceived(message, sessionEnded,
-                                                   cardIndex)
+                                                   cardIndex, fromNotification)
   {
     this.init((function() {
       this._pendingRequest = null;
@@ -265,6 +265,21 @@ var MmiManager = {
       if (message == null && !sessionEnded) {
         return;
       }
+
+      // sessionEnded = true;
+      console.log('XXX: sessionEnded ', sessionEnded,
+                  ' -- document.hidden ', document.hidden);
+      if (!fromNotification && sessionEnded && document.hidden) {
+        console.log('XXX: sendNotification');
+        this.sendNotification(message, cardIndex);
+        return;
+      }
+
+      console.log('XXX: session not ended or document not hidden');
+      var request = window.navigator.mozApps.getSelf();
+      request.onsuccess = function(evt) {
+        request.result.launch('dialer');
+      };
 
       var conn = navigator.mozMobileConnections[cardIndex || 0];
       var title = MobileOperator.userFacingInfo(conn).operator;
@@ -289,6 +304,30 @@ var MmiManager = {
       };
       window.postMessage(data, this.COMMS_APP_ORIGIN);
     }).bind(this));
+  },
+
+  sendNotification: function(message, cardIndex) {
+    var self = this;
+    var request = window.navigator.mozApps.getSelf();
+    request.onsuccess = function(evt) {
+      console.log('XXX mozApps success');
+      var app = evt.target.result;
+
+      LazyLoader.load('/shared/js/notification_helper.js', function() {
+        var iconURL = NotificationHelper.getIconURI(app, 'dialer');
+        var clickCB = function(evt) {
+          evt.target.close();
+          app.launch('dialer');
+          var sessionEnded = true;
+          var fromNotification = true;
+          self.handleMMIReceived(message, sessionEnded, cardIndex, fromNotification);
+        };
+        var notification =
+          new Notification('USSD', {body: message, icon: iconURL});
+        notification.addEventListener('click', clickCB);
+        // FIXME How do we release the priority lock?
+      });
+    };
   },
 
   isMMI: function mm_isMMI(number) {
