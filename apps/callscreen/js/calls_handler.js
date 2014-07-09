@@ -36,6 +36,7 @@ var CallsHandler = (function callsHandler() {
 
   /* === Setup === */
   function setup() {
+    console.log('XXXXX CallsHandler setup + ', RANDOM);
     if (telephony) {
       // Somehow the muted property appears to true after initialization.
       // Set it to false.
@@ -130,6 +131,7 @@ var CallsHandler = (function callsHandler() {
   }
 
   function addCall(call) {
+    console.log('XXXXX addCall + ', RANDOM);
     // Once we already have 1 call, we need to care about incoming
     // calls and insert new dialing calls.
     if (handledCalls.length &&
@@ -340,7 +342,9 @@ var CallsHandler = (function callsHandler() {
 
   /* === Bluetooth Headset support ===*/
   function handleBTCommand(message) {
+    console.log('XXXX WESH Bluetooth! ' + RANDOM);
     var command = message.command;
+    var command = 'CHLD=3';
     switch (command) {
       case 'CHUP':
         end();
