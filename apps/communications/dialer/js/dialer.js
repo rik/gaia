@@ -296,7 +296,7 @@ var CallHandler = (function callHandler() {
           CallLog.appendGroup(logGroup);
         });
 
-        if("secondNumber" in data) {
+        if('secondNumber' in data) {
           var entryCdmaSecond = {
             date: Date.now() - parseInt(data.duration),
             type: 'incoming',
@@ -305,7 +305,8 @@ var CallHandler = (function callHandler() {
             emergency: false,
             voicemail: isVoicemailNumber,
             status: 'connected'
-          }
+          };
+
           CallLogDBManager.add(entryCdmaSecond,
             function(logGroupCdmaSecondCall) {
             highPriorityWakeLock = navigator.requestWakeLock('high-priority');
