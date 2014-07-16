@@ -243,10 +243,16 @@ suite('navigation bar', function() {
         });
       });
 
-      test('should add call waiting number for cdma', function() {
-        sysMsg.secondNumber = '23456'
+      test('should set the phone number', function() {
+        triggerSysMsg(sysMsg);
+        sinon.assert.calledWithMatch(addSpy, {number: '12345'});
+      });
+
+      test('should set cdma call waiting number', function() {
+        sysMsg.secondNumber = '23456';
         triggerSysMsg(sysMsg);
         sinon.assert.calledWithMatch(addSpy, {number: '23456'});
+        sinon.assert.calledWithMatch(addSpy, {number: '12345'});
       });
 
       test('should set the serviceId', function() {
