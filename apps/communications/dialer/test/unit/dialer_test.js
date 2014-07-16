@@ -243,9 +243,10 @@ suite('navigation bar', function() {
         });
       });
 
-      test('should set the phone number', function() {
+      test('should add call waiting number for cdma', function() {
+        sysMsg.secondNumber = '23456'
         triggerSysMsg(sysMsg);
-        sinon.assert.calledWithMatch(addSpy, {number: '12345'});
+        sinon.assert.calledWithMatch(addSpy, {number: '23456'});
       });
 
       test('should set the serviceId', function() {
@@ -291,7 +292,29 @@ suite('navigation bar', function() {
         sinon.assert.calledWith(appendSpy, fakeGroup);
       });
 
+      test('should also insert new call waiting group for cdma log view',
+      function() {
+        var fakeGroup = '----uniq----';
+        var fakeGroupCdma = '-----cdma----';
+        var appendSpy = this.sinon.spy(MockCallLog, 'appendGroup');
+        sysMsg.secondNumber = '34567';
+
+        triggerSysMsg(sysMsg);
+        addSpy.yield(fakeGroup);
+        addSpy.yield(fakeGroupCdma);
+
+        sinon.assert.calledWith(appendSpy, fakeGroup);
+        sinon.assert.calledWith(appendSpy, fakeGroupCdma);
+      });
+
       test('should release the wake lock', function() {
+        triggerSysMsg(sysMsg);
+        var wakeLock = MockNavigatorWakeLock.mLastWakeLock;
+        assert.isTrue(wakeLock.released);
+      });
+
+      test('should release wake lock for cdma call waiting', function() {
+        sysMsg.secondNumber = '45678';
         triggerSysMsg(sysMsg);
         var wakeLock = MockNavigatorWakeLock.mLastWakeLock;
         assert.isTrue(wakeLock.released);
