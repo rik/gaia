@@ -5,7 +5,6 @@
 /*global ContactPhotoHelper, Contacts, IDBKeyRange, LazyLoader, Utils */
 
 var CallLogDBManager = {
-  _debugGroups: [],
   _db: null,
   _dbName: 'dialerRecents',
   _dbRecentsStore: 'dialerRecents',
@@ -956,7 +955,6 @@ var CallLogDBManager = {
 
         if (item && getCursor) {
           if (storeName === self._dbGroupsStore) {
-            self._debugGroups.push(item.value.id);
             callback({
               value: self._getGroupObject(item.value),
               continue: function() { return item.continue(); }

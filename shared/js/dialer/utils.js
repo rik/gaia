@@ -20,8 +20,9 @@ var Utils = {
       m: padNumber(elapsed.getUTCMinutes()),
       s: padNumber(elapsed.getUTCSeconds())
     };
-    return navigator.mozL10n.get(elapsed.getUTCHours() > 0 ?
-      'callDurationHours' : 'callDurationMinutes', durationL10n);
+    var durationFormat = elapsed.getUTCHours() > 0 ?
+      'callDurationHours' : 'callDurationMinutes';
+    return navigator.mozL10n.get(durationFormat, durationL10n);
   },
 
   headerDate: function ut_headerDate(time) {
@@ -37,7 +38,7 @@ var Utils = {
     if (day_diff < 0 || diff < 0) {
       return dtf.localeFormat(new Date(time), _('shortDateTimeFormat'));
     }
-    return day_diff === 0 && today ||
+    return day_diff == 0 && today ||
       day_diff == 1 && yesterday ||
       day_diff < 6 && dtf.localeFormat(new Date(time), '%A') ||
       dtf.localeFormat(new Date(time), '%x');

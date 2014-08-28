@@ -1,6 +1,6 @@
 'use strict';
 
-/* global CallLogDBManager, LazyL10n, LazyLoader, MozActivity, Utils */
+/* global CallLogDBManager, LazyLoader, MozActivity, Utils */
 
 (function(exports) {
   var currentGroup;
@@ -45,14 +45,14 @@
     var callDurations = document.getElementById('call-durations');
     callDurations.innerHTML = '';
     group.calls.forEach(function(call) {
-      var time = document.createElement('p');
-      time.classList.add('cd__time');
+      var startTime = document.createElement('p');
+      startTime.classList.add('cd__time');
       // XXX Make sure we deal with 12/24
-      time.textContent = Utils.prettyDate(call.date);
+      startTime.textContent = Utils.prettyDate(call.date);
 
       var duration = document.createElement('p');
       duration.classList.add('cd__duration');
-      LazyL10n.get(function(_) {
+      navigator.mozL10n.once(function() {
         if (call.duration === 0) {
           if (group.type === 'incoming') {
             duration.setAttribute('data-l10n-id', 'missed');
@@ -66,7 +66,7 @@
 
       var row = document.createElement('div');
       row.classList.add('call-duration');
-      row.appendChild(time);
+      row.appendChild(startTime);
       row.appendChild(duration);
 
       callDurations.appendChild(row);
@@ -159,9 +159,9 @@
         .then(function(group) {
           currentGroup = group;
           updateGroupInformation(group);
-          callInfoView.hidden = false;
           updateCallDurations(group);
           updateActionButtons(group);
+          callInfoView.hidden = false;
         });
         // .catch(function(error) {
           // console.log('OOPS', error.toString());
