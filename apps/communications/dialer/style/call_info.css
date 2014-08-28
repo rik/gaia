@@ -4,13 +4,37 @@
   background: white;
   width: 100vw;
   height: calc(100vh - 4.5rem);
+  color: #333;
+}
 
-  /* XXX Remove */
-  color: black;
+#call-info-view p {
+  margin: 0;
+}
+
+.ci__wrapper {
+  padding: 1.4rem 1.5rem 0;
+}
+
+.ci__calls-wrapper {
+  padding: 0 0.9rem 1.4rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.ci__group-info {
+  display: flex;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.ci__day {
+  flex-grow: 1;
 }
 
 .call-duration {
   display: flex;
+  margin-top: 1rem;
+  font-size: 1.4rem;
 }
 
 .cd__start-time {
