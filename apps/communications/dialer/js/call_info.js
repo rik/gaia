@@ -46,7 +46,7 @@
     callDurations.innerHTML = '';
     group.calls.forEach(function(call) {
       var startTime = document.createElement('p');
-      startTime.classList.add('cd__time');
+      startTime.classList.add('cd__start-time');
       // XXX Make sure we deal with 12/24
       startTime.textContent = Utils.prettyDate(call.date);
 

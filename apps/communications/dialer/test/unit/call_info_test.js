@@ -1,8 +1,9 @@
 'use strict';
 
-/* globals CallInfo, CallLogDBManager, MocksHelper, Utils */
+/* globals CallInfo, CallLogDBManager, MockL10n, MocksHelper, Utils */
 
 require('/dialer/test/unit/mock_call_log_db_manager.js');
+require('/shared/test/unit/mocks/mock_l10n.js');
 require('/shared/test/unit/mocks/mock_lazy_loader.js');
 require('/shared/test/unit/mocks/mock_moz_activity.js');
 require('/shared/test/unit/mocks/dialer/mock_utils.js');
@@ -17,6 +18,7 @@ var mocksHelperForCallInfoView = new MocksHelper([
 ]).init();
 
 suite('Call Info', function(argument) {
+  var realL10n;
 
   mocksHelperForCallInfoView.attachTestHelpers();
 
@@ -35,6 +37,13 @@ suite('Call Info', function(argument) {
     contactsIframe = document.createElement('iframe');
     contactsIframe.id = 'iframe-contacts';
     document.body.appendChild(contactsIframe);
+
+    realL10n = navigator.mozL10n;
+    navigator.mozL10n = MockL10n;
+  });
+
+  suiteTeardown(function() {
+    navigator.mozL10n = realL10n;
   });
 
   var groupReturn = {
@@ -175,6 +184,78 @@ suite('Call Info', function(argument) {
         assert.isFalse(classList.contains('icon-outgoing'));
         assert.isFalse(classList.contains('icon-incoming'));
         assert.isTrue(classList.contains('icon-missed'));
+      });
+    });
+  });
+
+  suite('displaying calls', function() {
+    setup(function() {
+      groupReturn.calls = [
+        {date: 123, duration: 0},
+        {date: 456, duration: 12},
+        {date: 789, duration: 9001}
+      ];
+
+      this.sinon.stub(Utils, 'prettyDate').returns('wesh');
+      this.sinon.stub(Utils, 'prettyDuration').returnsArg(0);
+
+      this.sinon.useFakeTimers();
+      CallInfo.show(fakeNumber, fakeDate, fakeType, fakeStatus);
+      this.sinon.clock.tick();
+    });
+
+    teardown(function() {
+      groupReturn.calls = [];
+    });
+
+    test('creates two rows', function() {
+      var rows = document.getElementsByClassName('call-duration');
+      assert.equal(rows.length, 3);
+    });
+
+    test('displays a friendly start date', function() {
+      sinon.assert.calledWith(Utils.prettyDate, groupReturn.calls[0].date);
+      sinon.assert.calledWith(Utils.prettyDate, groupReturn.calls[1].date);
+      var startTimes = document.getElementsByClassName('cd__start-time');
+      for (var startTime of startTimes) {
+        assert.equal(startTime.textContent, 'wesh');
+      }
+    });
+
+    test('displays calls in the proper order', function() {
+      var durations = document.getElementsByClassName('cd__duration');
+      for (var i=1; i < durations.length; i++) {
+        assert.equal(durations[i].textContent, groupReturn.calls[i].duration);
+      }
+    });
+
+    suite('calls with 0 duration', function() {
+      var previousType;
+
+      setup(function() {
+        previousType = groupReturn.type;
+      });
+
+      teardown(function() {
+        groupReturn.type = previousType;
+      });
+
+      test('cancelled calls', function() {
+        groupReturn.type = 'dialing';
+        CallInfo.show(fakeNumber, fakeDate, fakeType, fakeStatus);
+        this.sinon.clock.tick();
+
+        var durations = document.getElementsByClassName('cd__duration');
+        assert.equal(durations[0].getAttribute('data-l10n-id'), 'cancelled');
+      });
+
+      test('missed calls', function() {
+        groupReturn.type = 'incoming';
+        CallInfo.show(fakeNumber, fakeDate, fakeType, fakeStatus);
+        this.sinon.clock.tick();
+
+        var durations = document.getElementsByClassName('cd__duration');
+        assert.equal(durations[0].getAttribute('data-l10n-id'), 'missed');
       });
     });
   });
